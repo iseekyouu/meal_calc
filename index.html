@@ -2,9 +2,106 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script type='text/javascript'  src = 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js' ></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script type='text/javascript'  src = 'https://unpkg.com/vue@2.5.9/dist/vue.js' ></script>
+
     <title>Meal Calc</title>
   </head>
+
   <body>
-      <h1>Meal Calc dev</h1>
+
+    <div class='container-fluid' id = 'app'>
+
+      <h1 class='bd-title'>Meal Calc</h1>
+
+      <div class='container'>
+        <div class='row'>
+          <div class='col-6'>
+            <category-form></category-form>
+          </div>
+
+          <div class='col-6'>
+            <category-list></category-list>
+          </div>
+        </div>
+      </div>
+
+
+        <div class='container'>
+          <div class='row'>
+            <div class='col-6'>
+              <product-form-global ref = 'productForm'></product-form-global>
+            </div>
+
+            <div class='col-6'>
+              <product-list ref = 'productList'>
+              </product-list>
+            </div>
+
+          </div>
+        </div>
+
+      <hr></hr>
+        <h2 class = 'header2'>Meal calc</h2>
+        <meal-calc  inline-template>
+        <table class="table table-bordered ">
+          <tr class="table-info" >
+            <th>Категория</th>
+            <th>Продукт</th>
+            <th >Количество</th>
+            <th>Б</th>
+            <th>Ж</th>
+            <th>У</th>
+            <th>Калорийность</th>
+            <th>Б</th>
+            <th>Ж</th>
+            <th>У</th>
+            <th></th>
+          </tr>
+          <tr v-for = '(item, index) in mealArr'>
+            <td class="bg-success">
+              <category-select :categories = 'catArr'
+                               :selected.sync = 'item.CategoryID'
+                               :product-list.sync = 'item.ProductList'
+              >
+              </category-select>
+            </td>
+            <td class="bg-success">
+              <product-select :products = 'item.ProductList'
+                              :selected.sync = 'item.Product'
+                              :parent-index = 'index'
+              >
+              </product-select>
+            </td>
+            <td class="bg-success">
+              <input class = 'form-control sm' type="text"
+                     v-model = 'item.Product.Amount' @keyup = 'amountChange(item, index)'>
+            </td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.Product.Protein'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.Product.Fat'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.Product.Carbo'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.Calories'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.aProtein'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.aFat'></td>
+            <td><input class = 'form-control sm' type="text" readonly v-model = 'item.aCarbo'></td>
+            <td><button class = 'btn btn-danger' @click = 'remove'>remove</button></td>
+          </tr>
+          <tr >
+            <td colspan = '5'> <button type = 'button' class = 'btn btn-success' @click = 'addRow'>add</button></td>
+            <td class="table-primary">Total:</td>
+            <td class="table-primary">{{ total().Calories }}</td>
+            <td class="table-primary">{{ total().Protein }}</td>
+            <td class="table-primary">{{ total().Fat }}</td>
+            <td class="table-primary">{{ total().Carbo }}</td>
+            <td></td>
+          </tr>
+        </table>
+        </meal-calc>
+
+    </div>
   </body>
+
+  <script type = 'text/javascript' src="js/js.js?math.round(1)"></script>
+
 </html>

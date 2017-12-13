@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script type='text/javascript'  src = 'https://cdn.jsdelivr.net/npm/vue' ></script>
+</head>
+<body>
+<div class='container-fluid' id = 'app'>
+
+    <h1 class='bd-title'>Meal Calc</h1>
+
+    <div class='container'>
+        <div class='row'>
+            <div class='col-6'>
+                <h2> Add new category </h2>
+                <form action="/Category/addCategory.php" method="Post">
+
+                    <div class="form-group row">
+                        <label for="categoryName" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="categoryName" name = 'Name' placeholder="categoryName">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+
+            <div class='col-6'>
+                <h2> Categories </h2>
+                <ul id ='Categories'>
+                    <li v-for='cat in catArr'>
+                        {{ cat.Name }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <my-component></my-component>
+
+</div>
+</body>
+<script type = 'text/javascript' >
+    new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            catArr: ['bam', 'bum', 'tss']
+        },
+
+        created: function (){
+            this.fetchData('/Category/getCategories.php', (model, response) => {
+                model.catArr = JSON.parse(response);
+        });
+        },
+
+        methods: {
+            fetchData: function(scr, callback){
+                let self = this;
+                var xhr = new XMLHttpRequest();
+                xhr.open('Get', scr);
+                xhr.send();
+                xhr.onreadystatechange = function() { // (3)
+                    if (xhr.readyState != 4) return;
+
+                    if (xhr.status != 200) {
+                        alert(xhr.status + ': ' + xhr.statusText);
+                    } else {
+                        callback(self, xhr.responseText);
+                    }
+                }
+            }
+        },
+
+        components: {
+            'my-component' :{
+                template:'<div>A custom component!</div>'
+            }
+        }
+
+
+    });
+
+</script>
+</html>
